@@ -7,7 +7,7 @@ import agentops
 
 
 load_dotenv()
-
+agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
 
 
 csv_search_tool = CSVSearchTool(csv='data.csv')
@@ -131,7 +131,7 @@ class ContentStrategyCrew():
             output_file='./output/final_package.md'
         )
 
-    agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
+
     @crew
     def crew(self) -> Crew:
         """Creates the Content Strategy crew"""
