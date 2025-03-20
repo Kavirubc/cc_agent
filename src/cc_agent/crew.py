@@ -1,66 +1,112 @@
+import os
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-
 from dotenv import load_dotenv
+from crewai_tools import CSVSearchTool
+import agentops
 
 load_dotenv()
 
-# If you want to run a snippet of code before or after the crew starts,
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+
+csv_search_tool = CSVSearchTool(csv='data.csv')
 
 @CrewBase
-class CcAgent():
-    """CcAgent crew"""
-
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
+class ContentStrategyCrew():
+    """Content strategy crew"""
+    
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
+    
+    def __init__(self):
+        # Initialize with dynamic CSV path
+        self.csv_tool = CSVSearchTool(csv='data.csv')
 
-    # If you would like to add tools to your agents, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
+    # Agents Section
     @agent
-    def researcher(self) -> Agent:
+    def data_analyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['researcher'],
+            config=self.agents_config['data_analyst'],
+            
+            verbose=True,
+            tools=[self.csv_tool]
+        )
+
+    @agent
+    def trend_researcher(self) -> Agent:
+        return Agent(
+            config=self.agents_config['trend_researcher'],
             verbose=True
         )
 
     @agent
-    def reporting_analyst(self) -> Agent:
+    def content_strategist(self) -> Agent:
         return Agent(
-            config=self.agents_config['reporting_analyst'],
+            config=self.agents_config['content_strategist'],
             verbose=True
         )
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
+    @agent
+    def content_creator(self) -> Agent:
+        return Agent(
+            config=self.agents_config['content_creator'],
+            verbose=True
+        )
+
+    @agent
+    def quality_controller(self) -> Agent:
+        return Agent(
+            config=self.agents_config['quality_controller'],
+            verbose=True
+        )
+
+    # Tasks Section
     @task
-    def research_task(self) -> Task:
+    def data_analysis(self) -> Task:
         return Task(
-            config=self.tasks_config['research_task'],
+            config=self.tasks_config['data_analysis'],
+            context=[],  # Add any required context
+            tools=[self.csv_tool],  # Explicitly attach tool
+            output_file='./output/analysis_report.md'
+    )
+
+
+    @task
+    def trend_research(self) -> Task:
+        return Task(
+            config=self.tasks_config['trend_research'],
+            output_file='./output/trend_report.md'
         )
 
     @task
-    def reporting_task(self) -> Task:
+    def strategy_development(self) -> Task:
         return Task(
-            config=self.tasks_config['reporting_task'],
-            output_file='report.md'
+            config=self.tasks_config['strategy_development'],
+            output_file='./output/content_calendar.md'
         )
 
+    @task
+    def content_creation(self) -> Task:
+        return Task(
+            config=self.tasks_config['content_creation'],
+            output_file='./output/content_assets.md'
+        )
+
+    @task
+    def quality_assurance(self) -> Task:
+        return Task(
+            config=self.tasks_config['quality_assurance'],
+            output_file='./output/final_package.md'
+        )
+    agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
     @crew
     def crew(self) -> Crew:
-        """Creates the CcAgent crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
+        """Creates the Content Strategy crew"""
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
-            process=Process.sequential,
+            agents=self.agents,
+            tasks=self.tasks,
+            # process=Process.hierarchical,
+            # manager_llm="gpt-4o-mini",  # Update with your preferred manager LLM
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+            memory=True,
+            full_output=True
         )

@@ -1,17 +1,42 @@
-research_task:
+data_analysis:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Analyze {csv_file} using CSV search tool to identify:
+    1. Top-performing content types
+    2. Engagement patterns
+    3. Audience demographics
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    Comprehensive analysis report with key metrics in markdown format
+  agent: data_analyst
 
-reporting_task:
+
+trend_research:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Research current {industry} trends including platform-specific formats,
+    seasonal opportunities, and competitor strategies to make sure {company} get's the best Social Media plan
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    Detailed trend report with ranked content recommendations
+  agent: trend_researcher
+
+strategy_development:
+  description: >
+    Create 30-day content calendar incorporating analysis insights and
+    trend research while following {brand_guidelines}
+  expected_output: >
+    Multi-platform content calendar with posting schedule and format breakdown
+  agent: content_strategist
+
+content_creation:
+  description: >
+    Generate platform-specific assets including captions, scripts, and
+    visual concepts aligned with {brand_voice}
+  expected_output: >
+    Complete content package with 20+ production-ready assets
+  agent: content_creator
+
+quality_assurance:
+  description: >
+    Verify content quality, brand voice consistency, and engagement potential
+    through rigorous testing protocols
+  expected_output: >
+    Polished content package with QA report and improvement suggestions
+  agent: quality_controller
