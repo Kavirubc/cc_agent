@@ -2,15 +2,18 @@ import os
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from dotenv import load_dotenv
-from crewai_tools import CSVSearchTool
+from crewai_tools import CSVSearchTool, SerperDevTool, ScrapeWebsiteTool
 import agentops
 
+
 load_dotenv()
+
 
 
 csv_search_tool = CSVSearchTool(csv='data.csv')
 
 @CrewBase
+
 class ContentStrategyCrew():
     """Content strategy crew"""
     
@@ -30,6 +33,24 @@ class ContentStrategyCrew():
             verbose=True,
             tools=[self.csv_tool]
         )
+    
+    @agent
+    def retrieve_news(self) -> Agent:
+        return Agent(
+			config=self.agents_config['retrieve_news'],
+			tools=[SerperDevTool()],
+			verbose=True,
+		)
+	
+
+    @agent
+    def website_scraper(self) -> Agent:
+        return Agent(
+			config=self.agents_config['website_scraper'],
+			tools=[ScrapeWebsiteTool()],
+			verbose=True,
+			# llm=self.ollama_llm
+		)
 
     @agent
     def trend_researcher(self) -> Agent:
@@ -69,6 +90,18 @@ class ContentStrategyCrew():
             output_file='./output/analysis_report.md'
     )
 
+    @task
+    def retrieve_news_task(self) -> Task:
+        return Task(
+			config=self.tasks_config['retrieve_news_task'],
+		)
+
+
+    @task
+    def website_scrape_task(self) -> Task:
+        return Task(
+			config=self.tasks_config['website_scrape_task'],
+		)
 
     @task
     def trend_research(self) -> Task:
@@ -97,6 +130,7 @@ class ContentStrategyCrew():
             config=self.tasks_config['quality_assurance'],
             output_file='./output/final_package.md'
         )
+
     agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
     @crew
     def crew(self) -> Crew:
@@ -104,7 +138,7 @@ class ContentStrategyCrew():
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
-            # process=Process.hierarchical,
+            process=Process.sequential,
             # manager_llm="gpt-4o-mini",  # Update with your preferred manager LLM
             verbose=True,
             memory=True,

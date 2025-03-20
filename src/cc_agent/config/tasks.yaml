@@ -8,11 +8,30 @@ data_analysis:
     Comprehensive analysis report with key metrics in markdown format
   agent: data_analyst
 
+retrieve_news_task:
+  description: >
+    Conduct a comprehensive web search to gather the latest and most relevant information about "{industry} and {company}".
+    Focus on finding credible and authoritative sources that provide detailed insights about the topic.
+    Ensure that the information is up-to-date, as the current date is {current_date}.
+  expected_output: >
+    A list of 10 websites with the most relevant and credible information about "{industry} and {company}".
+    Each entry should include the website's title, URL, and a brief summary of its content.
+  agent: retrieve_news
+
+website_scrape_task:
+  description: >
+    Scrape the content from the provided websites to extract detailed and accurate information.
+    Focus on retrieving key points, headlines, and summaries relevant to "{industry} and {company}".
+    Ensure that the extracted information is well-organized and free of unnecessary data.
+  expected_output: >
+    A structured summary of each website's content, including key points, headlines, and relevant details.
+    The output should be concise but comprehensive, capturing all important information from each source.
+  agent: website_scraper
 
 trend_research:
   description: >
-    Research current {industry} trends including platform-specific formats,
-    seasonal opportunities, and competitor strategies to make sure {company} get's the best Social Media plan
+    Conduct a comprehensive web search to gather the latest and most relevant information aboutcurrent {industry} trends including platform-specific formats,
+    seasonal opportunities, and competitor strategies to make sure {company} get's the best Social Media plan,Ensure that the information is up-to-date, as the current date is {current_date}
   expected_output: >
     Detailed trend report with ranked content recommendations
   agent: trend_researcher

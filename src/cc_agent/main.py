@@ -1,7 +1,12 @@
 import sys
+import os
 import warnings
 from datetime import datetime
 from crew import ContentStrategyCrew
+from dotenv import load_dotenv
+load_dotenv()
+
+
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -10,10 +15,15 @@ def execute_crew():
     inputs = {
         'csv_file': 'data.csv',
         'company': 'convogrid.ai',
-        'industry': 'Conversation Design \ Marketing and Content Creation',
+        'industry': 'Conversation Design and Marketing and Content Creation',
         'brand_guidelines': 'modern, youthful, eco-conscious',
-        'brand_voice': 'casual yet authoritative'
+        'brand_voice': 'casual yet authoritative',
+        'current_date': '2025 March 20'
     }
+    # agentops.init(
+    # api_key=os.getenv("AGENTOPS_API_KEY"),
+    # tags=['cc-agent']
+    # )
     
     try:
         ContentStrategyCrew().crew().kickoff(inputs=inputs)
