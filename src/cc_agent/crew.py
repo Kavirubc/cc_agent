@@ -104,11 +104,14 @@ class ContentStrategyCrew():
     @task
     def content_strategy_planning(self) -> Task:
         return Task(
-            config=self.tasks_config['content_strategy_planning'],
-            context=[],
-            output_file='./output/content_strategy_plan.md'
-        )
-    
+        config=self.tasks_config['content_strategy_planning'],
+        context=[
+            self.social_media_analysis(),
+            self.company_data_scraping(),
+            self.website_scraping()
+        ],
+        output_file='./output/content_strategy_plan.md'
+    )
 
 
     agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
