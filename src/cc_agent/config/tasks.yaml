@@ -8,3 +8,17 @@ social_media_analysis:
     Comprehensive analysis report with key metrics in markdown format that can be use to come to conclusions on how to plan the next weeks social media strategy
   async_execution: true
   agent: historical_data_analyst
+
+web_search:
+  description: >
+    Search the web for recent articles and reports about trends in the {industry} industry as of {current_date}.
+  expected_output: >
+    A list of URLs and brief summaries of the top 5 most relevant search results.
+  agent: data_provider_agent
+
+website_scraping:
+  description: >
+    Scrape the content from the URLs provided in the web search results to extract key insights and data points related to {industry} trends.
+  expected_output: >
+    A consolidated report summarizing the key findings from the scraped websites, including relevant statistics, predictions, and expert opinions.
+  agent: data_provider_agent
