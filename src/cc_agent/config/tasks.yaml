@@ -6,19 +6,40 @@ social_media_analysis:
     3. Which Social media had the best outcome for a certain type of content
   expected_output: >
     Comprehensive analysis report with key metrics in markdown format that can be use to come to conclusions on how to plan the next weeks social media strategy
-  async_execution: true
   agent: historical_data_analyst
 
 web_search:
   description: >
-    Search the web for recent articles and reports about trends in the {industry} industry as of {current_date}.
+    Search the web for recent articles, news, and blog posts related to the {industry} industry that can be turn into blog posts or social media videos and analyze the top 5 most relevant results.
   expected_output: >
     A list of URLs and brief summaries of the top 5 most relevant search results.
   agent: data_provider_agent
+
 
 website_scraping:
   description: >
     Scrape the content from the URLs provided in the web search results to extract key insights and data points related to {industry} trends.
   expected_output: >
-    A consolidated report summarizing the key findings from the scraped websites, including relevant statistics, predictions, and expert opinions.
+    A consolidated report summarizing the key findings from the scraped websites, including relevant statistics, predictions, and expert opinions in a way that be used by a content strategy team to come to conclusions on how to plan the next weeks social media strategy.
   agent: data_provider_agent
+
+web_background_analysis:
+  description: >
+    Analyze the web pages related to the {company_name} company and extract information about its history, mission, and values.
+  expected_output: >
+    A comprehensive list of URLs and brief summaries of the top 5 most relevant web pages and social media posts related to the company's background.
+  agent: company_background_analyst
+
+company_data_scraping:
+  description: >
+    Scrape the content from the web pages related to the {company_name} company to extract key insights and data points related to its history, mission, and values.
+  expected_output: >
+    A consolidated report summarizing the key findings from the scraped websites, including relevant statistics, predictions, and expert opinions.
+  agent: company_background_analyst
+
+content_strategy_planning:
+  description: >
+    Plan the content strategy for {company_name} the next weeks based on the analysis and background information gathered from the previous tasks. And the brand voice should be {brand_voice} and should follow the brand guidelines as {brand_guidelines}
+  expected_output: >
+    A comprehensive plan outlining the content strategy for the next weeks, including the topics to be covered, the type of content to be created, and the social media platforms to be used.
+  agent: content_strategist

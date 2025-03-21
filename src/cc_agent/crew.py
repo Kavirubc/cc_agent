@@ -35,6 +35,14 @@ class ContentStrategyCrew():
         )
     
     @agent
+    def company_background_analyst(self) -> Agent:
+        return Agent(
+            config=self.agents_config['company_background_analyst'],
+            verbose=True,
+            tools=[self.serper_dev_tool, self.scrape_website_tool]
+        )
+    
+    @agent
     def data_provider_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['data_provider_agent'],
@@ -42,7 +50,12 @@ class ContentStrategyCrew():
             tools=[self.serper_dev_tool, self.scrape_website_tool]
         )
     
-    
+    @agent
+    def content_strategist(self) -> Agent:
+        return Agent(
+            config=self.agents_config['content_strategist'],
+            verbose=True,
+        )
 
     # Tasks Section
     @task
@@ -52,6 +65,23 @@ class ContentStrategyCrew():
             context=[],  # Add any required context
             tools=[self.csv_tool_1],  # Explicitly attach tool
             output_file='./output/analysis_report.md'
+        )
+    
+    @task
+    def web_background_analysis(self) -> Task:
+        return Task(
+            config=self.tasks_config['web_background_analysis'],
+            context=[],
+            tools=[self.serper_dev_tool],
+        )
+    
+    @task
+    def company_data_scraping(self) -> Task:
+        return Task(
+            config=self.tasks_config['company_data_scraping'],
+            context=[],
+            tools=[self.scrape_website_tool],
+            output_file='./output/company_data_scraping_report.md'
         )
     
     @task
@@ -70,6 +100,16 @@ class ContentStrategyCrew():
             tools=[self.scrape_website_tool],
             output_file='./output/websearch_report.md'
         )
+    
+    @task
+    def content_strategy_planning(self) -> Task:
+        return Task(
+            config=self.tasks_config['content_strategy_planning'],
+            context=[],
+            output_file='./output/content_strategy_plan.md'
+        )
+    
+
 
     agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
     @crew

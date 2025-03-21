@@ -14,7 +14,7 @@ def execute_crew():
     """Run the content strategy crew with actual inputs"""
     inputs = {
         'csv_file': 'data.csv',
-        'company': 'convogrid.ai',
+        'company_name': 'convogrid.ai',
         'industry': 'Conversation Design and Marketing and Content Creation',
         'brand_guidelines': 'modern, youthful, eco-conscious',
         'brand_voice': 'casual yet authoritative',
