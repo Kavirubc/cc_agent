@@ -40,14 +40,6 @@ graph TD
         E -->|Executes| L
         L -->|Outputs| M[content_strategy_plan.md]
     end
-    
-    classDef agent fill:#f9d5e5,stroke:#333,stroke-width:1px;
-    classDef task fill:#eeeeee,stroke:#333,stroke-width:1px;
-    classDef output fill:#d5f9e5,stroke:#333,stroke-width:1px;
-    
-    class B,C,D,E agent;
-    class F,G,H,L task;
-    class I,J,K,M output;
 ```
 
 
