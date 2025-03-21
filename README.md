@@ -8,24 +8,46 @@ The Content Strategy Crew automates the entire content planning process through 
 
 ```mermaid
 graph TD
-    A[Content Strategy Crew] --> B[Historical Data Analyst]
-    A --> C[Company Background Analyst]
-    A --> D[Data Provider Agent]
-    A --> E[Content Strategist]
+    subgraph "Content Strategy Crew"
+        A[Crew Initialization]
+        
+        subgraph "Data Collection & Analysis"
+            B[Historical Data Analyst]
+            C[Company Background Analyst]
+            D[Data Provider Agent]
+        end
+        
+        subgraph "Strategy Development"
+            E[Content Strategist]
+        end
+        
+        A --> B
+        A --> C
+        A --> D
+        
+        B -->|Executes| F[Social Media Analysis Task]
+        C -->|Executes| G[Company Data Scraping Task]
+        D -->|Executes| H[Web Search & Scraping Tasks]
+        
+        F -->|Outputs| I[analysis_report.md]
+        G -->|Outputs| J[company_data_scraping_report.md]
+        H -->|Outputs| K[websearch_report.md]
+        
+        I -->|Context Input| L[Content Strategy Planning Task]
+        J -->|Context Input| L
+        K -->|Context Input| L
+        
+        E -->|Executes| L
+        L -->|Outputs| M[content_strategy_plan.md]
+    end
     
-    B -->|Analyzes| F[Social Media Data]
-    C -->|Researches| G[Company Background]
-    D -->|Gathers| H[Industry Trends]
+    classDef agent fill:#f9d5e5,stroke:#333,stroke-width:1px;
+    classDef task fill:#eeeeee,stroke:#333,stroke-width:1px;
+    classDef output fill:#d5f9e5,stroke:#333,stroke-width:1px;
     
-    F --> I[Social Media Analysis]
-    G --> J[Company Data Scraping]
-    H --> K[Web Search & Scraping]
-    
-    I --> L[Content Strategy Plan]
-    J --> L
-    K --> L
-    
-    E -->|Creates| L
+    class B,C,D,E agent;
+    class F,G,H,L task;
+    class I,J,K,M output;
 ```
 
 
