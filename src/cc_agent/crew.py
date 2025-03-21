@@ -4,11 +4,9 @@ from crewai.project import CrewBase, agent, crew, task
 from dotenv import load_dotenv
 from crewai_tools import CSVSearchTool, SerperDevTool, ScrapeWebsiteTool
 import agentops
-
+import typing
 
 load_dotenv()
-agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
-
 
 csv_search_tool = CSVSearchTool(csv='data.csv')
 
@@ -21,117 +19,102 @@ class ContentStrategyCrew():
     tasks_config = 'config/tasks.yaml'
     
     def __init__(self):
-        # Initialize with dynamic CSV path
-        self.csv_tool = CSVSearchTool(csv='data.csv')
+        # Initialize with dynamic CSV paths
+        self.csv_tool_1 = CSVSearchTool(csv='data1.csv')
+        # self.csv_tool_2 = CSVSearchTool(csv='data2.csv')
+        self.serper_dev_tool = SerperDevTool()
+        self.scrape_website_tool = ScrapeWebsiteTool()
 
     # Agents Section
     @agent
-    def data_analyst(self) -> Agent:
+    def historical_data_analyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['data_analyst'],
-            
+            config=self.agents_config['historical_data_analyst'],
             verbose=True,
-            tools=[self.csv_tool]
+            tools=[self.csv_tool_1]  # Use the appropriate CSV tool
         )
     
     @agent
-    def retrieve_news(self) -> Agent:
+    def company_background_analyst(self) -> Agent:
         return Agent(
-			config=self.agents_config['retrieve_news'],
-			tools=[SerperDevTool()],
-			verbose=True,
-		)
-	
-
-    @agent
-    def website_scraper(self) -> Agent:
-        return Agent(
-			config=self.agents_config['website_scraper'],
-			tools=[ScrapeWebsiteTool()],
-			verbose=True,
-			# llm=self.ollama_llm
-		)
-
-    @agent
-    def trend_researcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config['trend_researcher'],
-            verbose=True
+            config=self.agents_config['company_background_analyst'],
+            verbose=True,
+            tools=[self.serper_dev_tool, self.scrape_website_tool]
         )
-
+    
+    @agent
+    def data_provider_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['data_provider_agent'],
+            verbose=True,
+            tools=[self.serper_dev_tool, self.scrape_website_tool]
+        )
+    
     @agent
     def content_strategist(self) -> Agent:
         return Agent(
             config=self.agents_config['content_strategist'],
-            verbose=True
-        )
-
-    @agent
-    def content_creator(self) -> Agent:
-        return Agent(
-            config=self.agents_config['content_creator'],
-            verbose=True
-        )
-
-    @agent
-    def quality_controller(self) -> Agent:
-        return Agent(
-            config=self.agents_config['quality_controller'],
-            verbose=True
+            verbose=True,
         )
 
     # Tasks Section
     @task
-    def data_analysis(self) -> Task:
+    def social_media_analysis(self) -> Task:
         return Task(
-            config=self.tasks_config['data_analysis'],
+            config=self.tasks_config['social_media_analysis'],
             context=[],  # Add any required context
-            tools=[self.csv_tool],  # Explicitly attach tool
+            tools=[self.csv_tool_1],  # Explicitly attach tool
             output_file='./output/analysis_report.md'
+        )
+    
+    @task
+    def web_background_analysis(self) -> Task:
+        return Task(
+            config=self.tasks_config['web_background_analysis'],
+            context=[],
+            tools=[self.serper_dev_tool],
+        )
+    
+    @task
+    def company_data_scraping(self) -> Task:
+        return Task(
+            config=self.tasks_config['company_data_scraping'],
+            context=[],
+            tools=[self.scrape_website_tool],
+            output_file='./output/company_data_scraping_report.md'
+        )
+    
+    @task
+    def web_search(self) -> Task:
+        return Task(
+            config=self.tasks_config['web_search'],
+            context=[],
+            tools=[self.serper_dev_tool]
+        )
+
+    @task
+    def website_scraping(self) -> Task:
+        return Task(
+            config=self.tasks_config['website_scraping'],
+            context=[],
+            tools=[self.scrape_website_tool],
+            output_file='./output/websearch_report.md'
+        )
+    
+    @task
+    def content_strategy_planning(self) -> Task:
+        return Task(
+        config=self.tasks_config['content_strategy_planning'],
+        context=[
+            self.social_media_analysis(),
+            self.company_data_scraping(),
+            self.website_scraping()
+        ],
+        output_file='./output/content_strategy_plan.md'
     )
 
-    @task
-    def retrieve_news_task(self) -> Task:
-        return Task(
-			config=self.tasks_config['retrieve_news_task'],
-		)
 
-
-    @task
-    def website_scrape_task(self) -> Task:
-        return Task(
-			config=self.tasks_config['website_scrape_task'],
-		)
-
-    @task
-    def trend_research(self) -> Task:
-        return Task(
-            config=self.tasks_config['trend_research'],
-            output_file='./output/trend_report.md'
-        )
-
-    @task
-    def strategy_development(self) -> Task:
-        return Task(
-            config=self.tasks_config['strategy_development'],
-            output_file='./output/content_calendar.md'
-        )
-
-    @task
-    def content_creation(self) -> Task:
-        return Task(
-            config=self.tasks_config['content_creation'],
-            output_file='./output/content_assets.md'
-        )
-
-    @task
-    def quality_assurance(self) -> Task:
-        return Task(
-            config=self.tasks_config['quality_assurance'],
-            output_file='./output/final_package.md'
-        )
-
-
+    agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
     @crew
     def crew(self) -> Crew:
         """Creates the Content Strategy crew"""

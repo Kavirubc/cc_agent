@@ -1,54 +1,155 @@
-# CcAgent Crew
+# Content Strategy Crew by KSRX
 
-Welcome to the CcAgent Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+A powerful AI-powered content strategy system built with [crewAI](https://crewai.com) that orchestrates multiple specialized AI agents to analyze data, research trends, and develop comprehensive content strategies.
+
+## Overview
+
+The Content Strategy Crew automates the entire content planning process through a collaborative workflow where data flows from specialized agents to a central strategist:
+
+```mermaid
+graph TD
+    subgraph "Content Strategy Crew"
+        A[Crew Initialization]
+        
+        subgraph "Data Collection & Analysis"
+            B[Historical Data Analyst]
+            C[Company Background Analyst]
+            D[Data Provider Agent]
+        end
+        
+        subgraph "Strategy Development"
+            E[Content Strategist]
+        end
+        
+        A --> B
+        A --> C
+        A --> D
+        
+        B -->|Executes| F[Social Media Analysis Task]
+        C -->|Executes| G[Company Data Scraping Task]
+        D -->|Executes| H[Web Search & Scraping Tasks]
+        
+        F -->|Outputs| I[analysis_report.md]
+        G -->|Outputs| J[company_data_scraping_report.md]
+        H -->|Outputs| K[websearch_report.md]
+        
+        I -->|Context Input| L[Content Strategy Planning Task]
+        J -->|Context Input| L
+        K -->|Context Input| L
+        
+        E -->|Executes| L
+        L -->|Outputs| M[content_strategy_plan.md]
+    end
+```
+
+
+## How It Works
+
+The system follows a sequential process where:
+
+1. The Historical Data Analyst examines past social media performance
+2. The Company Background Analyst researches your company's profile
+3. The Data Provider Agent gathers current industry trends
+4. The Content Strategist synthesizes all this information to create a comprehensive strategy
+
+All data from the first three agents flows into the Content Strategist, who then creates a unified content strategy plan based on this collective intelligence.
 
 ## Installation
 
-Ensure you have Python >=3.10 <3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
-
-First, if you haven't already, install uv:
+Ensure you have Python >=3.10 <3.13 installed on your system.
 
 ```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Or using UV
 pip install uv
-```
-
-Next, navigate to your project directory and install the dependencies:
-
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
 crewai install
 ```
-### Customizing
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
 
-- Modify `src/cc_agent/config/agents.yaml` to define your agents
-- Modify `src/cc_agent/config/tasks.yaml` to define your tasks
-- Modify `src/cc_agent/crew.py` to add your own logic, tools and specific args
-- Modify `src/cc_agent/main.py` to add custom inputs for your agents and tasks
+## Configuration
 
-## Running the Project
+1. Add your API keys to the `.env` file:
 
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
-```bash
-$ crewai run
+```
+OPENAI_API_KEY=your_openai_api_key
+SERPER_API_KEY=your_serper_api_key
+AGENTOPS_API_KEY=your_agentops_api_key
 ```
 
-This command initializes the cc-agent Crew, assembling the agents and assigning them tasks as defined in your configuration.
+2. Prepare your data:
+    - Place your social media analytics CSV file at `data1.csv`
+3. Customize agent and task configurations in the YAML files:
+    - `config/agents.yaml`: Define agent roles and goals
+    - `config/tasks.yaml`: Customize task descriptions and outputs
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+## Usage
 
-## Understanding Your Crew
+Run the Content Strategy Crew with:
 
-The cc-agent Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+```bash
+python main.py
+# Or
+crewai run
+```
 
-## Support
+The system will generate output files in the `./output/` directory:
 
-For support, questions, or feedback regarding the CcAgent Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+- `analysis_report.md`: Social media performance analysis
+- `company_data_scraping_report.md`: Company background research
+- `websearch_report.md`: Industry trends and competitor analysis
+- `content_strategy_plan.md`: Final comprehensive content strategy
 
-Let's create wonders together with the power and simplicity of crewAI.
+
+## Key Implementation Note
+
+To ensure the Content Strategist receives all data from previous tasks, make sure to configure the context properly:
+
+```python
+@task
+def content_strategy_planning(self) -> Task:
+    return Task(
+        config=self.tasks_config['content_strategy_planning'],
+        context=[
+            self.social_media_analysis(),
+            self.company_data_scraping(),
+            self.website_scraping()
+        ],
+        output_file='./output/content_strategy_plan.md'
+    )
+```
+
+This ensures that all the outputs from previous tasks flow into the Content Strategist, allowing for a truly integrated strategy.
+
+## Process Flow
+
+```mermaid
+sequenceDiagram
+    participant Crew as Content Strategy Crew
+    participant HDA as Historical Data Analyst
+    participant CBA as Company Background Analyst
+    participant DPA as Data Provider Agent
+    participant CS as Content Strategist
+    
+    Crew->>HDA: Analyze social media data
+    HDA->>Crew: Return performance analysis
+    Crew->>CBA: Research company background
+    CBA->>Crew: Return company insights
+    Crew->>DPA: Search & scrape industry trends
+    DPA->>Crew: Return research findings
+    Crew->>CS: Synthesize all data
+    Note right of CS: Receives context from all previous tasks
+    CS->>Crew: Deliver comprehensive strategy
+```
+
+
+## Creator
+
+This project was created by Kaviru Hapuarachchi.
+
+- Website: [kaviru.cc](https://kaviru.cc)
+- Email: [hello@kaviru.cc](mailto:hello@kaviru.cc)
+- GitHub: [@Kavirubc](https://github.com/Kavirubc)
+
+If you have any questions or need assistance with this project, please don't hesitate to reach out!

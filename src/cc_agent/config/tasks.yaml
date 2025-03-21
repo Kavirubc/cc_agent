@@ -1,61 +1,45 @@
-data_analysis:
+social_media_analysis:
   description: >
     Analyze {csv_file} using CSV search tool to identify:
-    1. Top-performing content types
-    2. Engagement patterns
-    3. Audience demographics
+    1. Top-performing content types like static posts or reels and video content
+    2. Engagement patterns based on whether its a blog post or a job post or any other related post type
+    3. Which Social media had the best outcome for a certain type of content
   expected_output: >
-    Comprehensive analysis report with key metrics in markdown format
-  agent: data_analyst
+    Comprehensive analysis report with key metrics in markdown format that can be use to come to conclusions on how to plan the next weeks social media strategy
+  agent: historical_data_analyst
 
-retrieve_news_task:
+web_search:
   description: >
-    Conduct a comprehensive web search to gather the latest and most relevant information about "{industry} and {company}".
-    Focus on finding credible and authoritative sources that provide detailed insights about the topic.
-    Ensure that the information is up-to-date, as the current date is {current_date}.
+    Search the web for recent articles, news, and blog posts related to the {industry} industry that can be turn into blog posts or social media videos and analyze the top 5 most relevant results.
   expected_output: >
-    A list of 10 websites with the most relevant and credible information about "{industry} and {company}".
-    Each entry should include the website's title, URL, and a brief summary of its content.
-  agent: retrieve_news
+    A list of URLs and brief summaries of the top 5 most relevant search results.
+  agent: data_provider_agent
 
-website_scrape_task:
-  description: >
-    Scrape the content from the provided websites to extract detailed and accurate information.
-    Focus on retrieving key points, headlines, and summaries relevant to "{industry} and {company}".
-    Ensure that the extracted information is well-organized and free of unnecessary data.
-  expected_output: >
-    A structured summary of each website's content, including key points, headlines, and relevant details.
-    The output should be concise but comprehensive, capturing all important information from each source.
-  agent: website_scraper
 
-trend_research:
+website_scraping:
   description: >
-    Conduct a comprehensive web search to gather the latest and most relevant information aboutcurrent {industry} trends including platform-specific formats,
-    seasonal opportunities, and competitor strategies to make sure {company} get's the best Social Media plan,Ensure that the information is up-to-date, as the current date is {current_date}
+    Scrape the content from the URLs provided in the web search results to extract key insights and data points related to {industry} trends.
   expected_output: >
-    Detailed trend report with ranked content recommendations
-  agent: trend_researcher
+    A consolidated report summarizing the key findings from the scraped websites, including relevant statistics, predictions, and expert opinions in a way that be used by a content strategy team to come to conclusions on how to plan the next weeks social media strategy.
+  agent: data_provider_agent
 
-strategy_development:
+web_background_analysis:
   description: >
-    Create 30-day content calendar incorporating analysis insights and
-    trend research while following {brand_guidelines}
+    Analyze the web pages related to the {company_name} company and extract information about its history, mission, and values.
   expected_output: >
-    Multi-platform content calendar with posting schedule and format breakdown
+    A comprehensive list of URLs and brief summaries of the top 5 most relevant web pages and social media posts related to the company's background.
+  agent: company_background_analyst
+
+company_data_scraping:
+  description: >
+    Scrape the content from the web pages related to the {company_name} company to extract key insights and data points related to its history, mission, and values.
+  expected_output: >
+    A consolidated report summarizing the key findings from the scraped websites, including relevant statistics, predictions, and expert opinions.
+  agent: company_background_analyst
+
+content_strategy_planning:
+  description: >
+    Plan the content strategy for {company_name} the next weeks based on the analysis and background information gathered from the previous tasks. And the brand voice should be {brand_voice} and should follow the brand guidelines as {brand_guidelines}
+  expected_output: >
+    A comprehensive plan outlining the content strategy for the next weeks, including the topics to be covered, the type of content to be created, and the social media platforms to be used.
   agent: content_strategist
-
-content_creation:
-  description: >
-    Generate platform-specific assets including captions, scripts, and
-    visual concepts aligned with {brand_voice}
-  expected_output: >
-    Complete content package with 20+ production-ready assets
-  agent: content_creator
-
-quality_assurance:
-  description: >
-    Verify content quality, brand voice consistency, and engagement potential
-    through rigorous testing protocols
-  expected_output: >
-    Polished content package with QA report and improvement suggestions
-  agent: quality_controller
