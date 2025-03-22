@@ -2,6 +2,8 @@
 
 A powerful AI-powered content strategy system built with [crewAI](https://crewai.com) that orchestrates multiple specialized AI agents to analyze data, research trends, and develop comprehensive content strategies.
 
+![Frontend Screenshot](Img/img1.png)
+![Frontend Screenshot](Img/img3.png)
 ## Overview
 
 The Content Strategy Crew automates the entire content planning process through a collaborative workflow where data flows from specialized agents to a central strategist:
@@ -95,14 +97,13 @@ You can run the Content Strategy Crew in two ways:
 
     This script will create a virtual environment, install dependencies, and start the FastAPI application.
 
-2.  Manually:
+2.  Access the frontend:
 
-    ```bash
-    python main.py
+    Open your browser and navigate to `http://localhost:8000/`. You should see the frontend.
 
-    # Or
-    crewai run
-    ```
+3.  Interact with the API:
+
+    Fill in the form fields and click "Execute Crew". The output from the API will be displayed in the `outputContent` section, and real-time updates will be shown in the `Updates` section.
 
 The system will generate output files in the `./output/` directory:
 
@@ -117,6 +118,15 @@ The FastAPI application provides the following endpoints:
 
 -   `POST /execute_crew`: Execute the Content Strategy Crew
 -   `GET /health`: Check the health status of the application and MongoDB connection
+-   `GET /`: Serves the main HTML file for the frontend
+
+## Real-time Updates
+
+The frontend displays real-time updates on which agent is running which task. This allows you to monitor the progress of the crew execution.
+
+## Displaying Markdown Output
+
+The frontend uses `marked.js` to parse the Markdown content and render it as HTML, providing a formatted and readable output.
 
 ## Key Implementation Note
 
@@ -162,6 +172,10 @@ sequenceDiagram
 ## MongoDB Integration
 
 The application now includes MongoDB integration for storing execution logs and outputs. Make sure to set the `MONGODB_URI` in your `.env` file.
+
+## CORS Support
+
+The API now supports Cross-Origin Resource Sharing (CORS) to allow requests from the frontend.
 
 ## Creator
 
