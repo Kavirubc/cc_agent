@@ -1,5 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pydantic import BaseModel
 import asyncio
@@ -20,8 +22,20 @@ load_dotenv()
 
 app = FastAPI()
 
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Mount static files directory
+app.mount("/static", StaticFiles(directory="src/cc_agent/www"), name="static")
 
 # MongoDB setup
 mongo_uri = os.getenv("MONGODB_URI", "mongodb://127.0.0.1:27017/cc_agent_db")
@@ -307,6 +321,11 @@ async def health_check():
             "mongodb": "not configured or connection failed",
             "timestamp": datetime.datetime.now().isoformat()
         }
+    
+@app.get("/")
+async def read_root():
+    """Serve the main HTML file."""
+    return HTMLResponse(open("src/cc_agent/www/index.html").read())
 
 if __name__ == "__main__":
     import uvicorn
