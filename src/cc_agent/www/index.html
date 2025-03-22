@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Strategy Crew</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    
+</head>
+
+<body>
+    <div class="container">
+        <h1>Content Strategy Crew</h1>
+        <form id="crewForm">
+            <div class="form-group">
+                <label for="csv_file">CSV File:</label>
+                <input type="text" id="csv_file" name="csv_file" value="data.csv" required>
+            </div>
+            <div class="form-group">
+                <label for="company_name">Company Name:</label>
+                <input type="text" id="company_name" name="company_name" value="convogrid.ai" required>
+            </div>
+            <div class="form-group">
+                <label for="industry">Industry:</label>
+                <input type="text" id="industry" name="industry"
+                    value="Conversation Design and Marketing and Content Creation" required>
+            </div>
+            <div class="form-group">
+                <label for="brand_guidelines">Brand Guidelines:</label>
+                <input type="text" id="brand_guidelines" name="brand_guidelines" value="modern, youthful, eco-conscious"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="brand_voice">Brand Voice:</label>
+                <input type="text" id="brand_voice" name="brand_voice" value="casual yet authoritative" required>
+            </div>
+            <div class="form-group">
+                <label for="current_date">Current Date:</label>
+                <input type="text" id="current_date" name="current_date" value="2025 March 21" required>
+            </div>
+            <button type="submit">Execute Crew</button>
+        </form>
+        <div id="output">
+            <h2>Output:</h2>
+            <pre id="outputContent"></pre>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+
+</html>
