@@ -5,13 +5,16 @@ from dotenv import load_dotenv
 from crewai_tools import CSVSearchTool, SerperDevTool, ScrapeWebsiteTool
 import agentops
 import typing
+import logging
 
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 csv_search_tool = CSVSearchTool(csv='data.csv')
 
 @CrewBase
-
 class ContentStrategyCrew():
     """Content strategy crew"""
     
