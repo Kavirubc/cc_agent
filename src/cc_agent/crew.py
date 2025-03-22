@@ -12,8 +12,6 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-csv_search_tool = CSVSearchTool(csv='data.csv')
-
 @CrewBase
 class ContentStrategyCrew():
     """Content strategy crew"""
@@ -22,6 +20,10 @@ class ContentStrategyCrew():
     tasks_config = 'config/tasks.yaml'
     
     def __init__(self):
+        # Initialize AgentOps
+        if os.getenv("AGENTOPS_API_KEY"):
+            agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
+            
         # Initialize with dynamic CSV paths
         self.csv_tool_1 = CSVSearchTool(csv='data1.csv')
         # self.csv_tool_2 = CSVSearchTool(csv='data2.csv')
@@ -107,17 +109,15 @@ class ContentStrategyCrew():
     @task
     def content_strategy_planning(self) -> Task:
         return Task(
-        config=self.tasks_config['content_strategy_planning'],
-        context=[
-            self.social_media_analysis(),
-            self.company_data_scraping(),
-            self.website_scraping()
-        ],
-        output_file='./output/content_strategy_plan.md'
-    )
+            config=self.tasks_config['content_strategy_planning'],
+            context=[
+                self.social_media_analysis(),
+                self.company_data_scraping(),
+                self.website_scraping()
+            ],
+            output_file='./output/content_strategy_plan.md'
+        )
 
-
-    agentops.init(api_key=os.getenv("AGENTOPS_API_KEY"))
     @crew
     def crew(self) -> Crew:
         """Creates the Content Strategy crew"""
