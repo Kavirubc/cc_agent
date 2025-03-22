@@ -1,3 +1,4 @@
+// filepath: /Users/kaviruhapuarachchi/Downloads/cc_agent/src/cc_agent/www/script.js
 document.getElementById('crewForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -39,6 +40,7 @@ document.getElementById('crewForm').addEventListener('submit', function (event) 
             const outputContent = document.getElementById('outputContent');
             const reader = stream.getReader();
             let markdownText = '';
+            const updatesContainer = document.getElementById('updates'); // Get the updates container
 
             return new Promise((resolve, reject) => {
                 function read() {
@@ -49,7 +51,13 @@ document.getElementById('crewForm').addEventListener('submit', function (event) 
                             resolve();
                             return;
                         }
-                        markdownText += value;
+                        // Check if the value is an agent/task update
+                        if (value.startsWith("Agent:")) {
+                            // Display the update in the updates container
+                            updatesContainer.textContent += value;
+                        } else {
+                            markdownText += value;
+                        }
                         read();
                     }, error => {
                         reject(error);

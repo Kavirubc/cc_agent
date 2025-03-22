@@ -95,22 +95,25 @@ async def log_execution_details(inputs: Dict[str, str], log_collector: LogCollec
         log_message = f"Input - {key}: {value}\n"
         log_collector.add_log(log_message)
         yield log_message.encode()
-    
+
     await asyncio.sleep(1)
     log_message = "Executing crew...\n"
     log_collector.add_log(log_message)
     yield log_message.encode()
     await asyncio.sleep(1)
 
-    # Placeholder for actual agent and task execution logging
+    # Simulate actual agent and task execution logging
     agent_task_logs = [
-        "Agent: Historical Data Analyst - Task: Social Media Analysis\n",
-        "Agent: Company Background Analyst - Task: Company Data Scraping\n",
-        "Agent: Data Provider Agent - Task: Web Search & Scraping\n",
-        "Agent: Content Strategist - Task: Content Strategy Planning\n"
+        {"agent": "Historical Data Analyst", "task": "Social Media Analysis"},
+        {"agent": "Company Background Analyst", "task": "Company Data Scraping"},
+        {"agent": "Data Provider Agent", "task": "Web Search & Scraping"},
+        {"agent": "Content Strategist", "task": "Content Strategy Planning"}
     ]
 
-    for log_message in agent_task_logs:
+    for item in agent_task_logs:
+        agent = item["agent"]
+        task = item["task"]
+        log_message = f"Agent: {agent} - Task: {task}\n"
         await asyncio.sleep(2)
         log_collector.add_log(log_message)
         yield log_message.encode()
