@@ -4,6 +4,7 @@ A powerful AI-powered content strategy system built with [crewAI](https://crewai
 
 ![Frontend Screenshot](Img/img1.png)
 ![Frontend Screenshot](Img/img3.png)
+
 ## Overview
 
 The Content Strategy Crew automates the entire content planning process through a collaborative workflow where data flows from specialized agents to a central strategist:
@@ -118,6 +119,9 @@ The FastAPI application provides the following endpoints:
 
 -   `POST /execute_crew`: Execute the Content Strategy Crew
 -   `GET /health`: Check the health status of the application and MongoDB connection
+-   `GET /history`: Retrieve all execution history entries
+-   `GET /history/{session_id}`: Retrieve a specific execution history entry
+-   `DELETE /history/{session_id}`: Delete a specific execution history entry
 -   `GET /`: Serves the main HTML file for the frontend
 
 ## Real-time Updates
@@ -127,6 +131,18 @@ The frontend displays real-time updates on which agent is running which task. Th
 ## Displaying Markdown Output
 
 The frontend uses `marked.js` to parse the Markdown content and render it as HTML, providing a formatted and readable output.
+
+## Next.js Frontend
+
+A modern Next.js frontend is also available in the `ccagent-frontend` directory. To use it:
+
+```bash
+cd ccagent-frontend
+npm install
+npm run dev
+```
+
+Then navigate to `http://localhost:3000` to access the improved user interface with tabs for updates and output, plus a history view of previous executions.
 
 ## Key Implementation Note
 
@@ -184,5 +200,3 @@ This project was created by Kaviru Hapuarachchi.
 -   Website: [kaviru.cc](https://kaviru.cc)
 -   Email: [hello@kaviru.cc](mailto:hello@kaviru.cc)
 -   GitHub: [@Kavirubc](https://github.com/Kavirubc)
-
-If you have any questions or need assistance with this project, please don't hesitate to reach out!
