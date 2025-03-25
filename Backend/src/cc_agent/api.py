@@ -324,7 +324,109 @@ async def health_check():
             "mongodb": "not configured or connection failed",
             "timestamp": datetime.datetime.now().isoformat()
         }
+
+# Add these new endpoints after your existing endpoints
+
+@app.get("/history")
+async def get_all_history():
+    """Endpoint to fetch all execution history entries."""
+    global client, db, output_collection
     
+    if client is None:
+        if not connect_to_mongodb():
+            raise HTTPException(status_code=503, detail="MongoDB connection failed")
+    
+    try:
+        # Verify connection with ping
+        client.admin.command('ping')
+        
+        # Fetch all history entries, sorted by date (newest first)
+        cursor = output_collection.find({}, {
+            "_id": 0,  # Exclude the MongoDB _id field
+            "session_id": 1,
+            "date": 1,
+            "inputs": 1,
+            "output": 1
+        }).sort("date", pymongo.DESCENDING)
+        
+        # Convert cursor to list and format dates
+        result = []
+        for doc in cursor:
+            if "date" in doc and isinstance(doc["date"], datetime.datetime):
+                doc["date"] = doc["date"].isoformat()
+            result.append(doc)
+        
+        return result
+    except Exception as e:
+        error_msg = f"Failed to fetch history: {str(e)}"
+        logging.error(f"{error_msg}\n{traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=error_msg)
+
+@app.get("/history/{session_id}")
+async def get_session_history(session_id: str):
+    """Endpoint to fetch a specific execution history entry by session ID."""
+    global client, db, output_collection
+    
+    if client is None:
+        if not connect_to_mongodb():
+            raise HTTPException(status_code=503, detail="MongoDB connection failed")
+    
+    try:
+        # Verify connection with ping
+        client.admin.command('ping')
+        
+        # Find the document with the specified session_id
+        doc = output_collection.find_one({"session_id": session_id})
+        
+        if not doc:
+            raise HTTPException(status_code=404, detail=f"No history found for session ID: {session_id}")
+        
+        # Convert MongoDB ObjectId to string for JSON serialization
+        if "_id" in doc:
+            doc["_id"] = str(doc["_id"])
+        
+        # Format date for JSON serialization
+        if "date" in doc and isinstance(doc["date"], datetime.datetime):
+            doc["date"] = doc["date"].isoformat()
+        
+        return doc
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        error_msg = f"Failed to fetch history for session {session_id}: {str(e)}"
+        logging.error(f"{error_msg}\n{traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=error_msg)
+
+# Optional: Add a delete history endpoint if needed
+@app.delete("/history/{session_id}")
+async def delete_session_history(session_id: str):
+    """Endpoint to delete a specific execution history entry."""
+    global client, db, output_collection
+    
+    if client is None:
+        if not connect_to_mongodb():
+            raise HTTPException(status_code=503, detail="MongoDB connection failed")
+    
+    try:
+        # Verify connection with ping
+        client.admin.command('ping')
+        
+        # Find and delete the document
+        result = output_collection.delete_one({"session_id": session_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail=f"No history found for session ID: {session_id}")
+        
+        return {"status": "success", "message": f"Session {session_id} deleted successfully"}
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        error_msg = f"Failed to delete history for session {session_id}: {str(e)}"
+        logging.error(f"{error_msg}\n{traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=error_msg)
+
 @app.get("/")
 async def read_root():
     """Serve the main HTML file."""
