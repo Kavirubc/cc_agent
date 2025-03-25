@@ -8,7 +8,20 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function HistoryDetailPage() {
     const { sessionId } = useParams()
-    const [historyData, setHistoryData] = useState<any>(null)
+    interface TaskProgress {
+        agent: string;
+        task: string;
+        status: string;
+        duration?: number;
+    }
+
+    interface HistoryData {
+        markdown_output?: string;
+        logs?: string;
+        task_progress?: TaskProgress[];
+    }
+
+    const [historyData, setHistoryData] = useState<HistoryData | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -82,7 +95,12 @@ export default function HistoryDetailPage() {
                             <ScrollArea className="h-[500px]">
                                 <div className="space-y-4">
                                     {Array.isArray(historyData.task_progress) ? (
-                                        historyData.task_progress.map((task, index) => (
+                                        historyData.task_progress.map((task: {
+                                            agent: string;
+                                            task: string;
+                                            status: string;
+                                            duration?: number;
+                                        }, index: number) => (
                                             <div key={index} className="border p-4 rounded-md">
                                                 <div className="font-medium">{task.agent}</div>
                                                 <div className="text-sm">{task.task}</div>

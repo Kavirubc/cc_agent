@@ -2,8 +2,8 @@
 
 A powerful AI-powered content strategy system built with [crewAI](https://crewai.com) that orchestrates multiple specialized AI agents to analyze data, research trends, and develop comprehensive content strategies.
 
-![Frontend Screenshot](Img/img1.png)
-![Frontend Screenshot](Img/img3.png)
+![Frontend Screenshot](/Backend/Img/img1.png)
+![Frontend Screenshot](/Backend/Img/img3.png)
 
 ## Overview
 
